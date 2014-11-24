@@ -8092,16 +8092,16 @@ int omx_vdec::alloc_map_ion_memory(OMX_U32 buffer_size,
 
   if(secure_mode) {
     if(external_meta_buffer) {
-      alloc_data->heap_mask = ION_HEAP(ION_CP_MFC_HEAP_ID);
+      alloc_data->heap_id_mask = ION_HEAP(ION_CP_MFC_HEAP_ID);
       alloc_data->flags |= ION_SECURE;
     } else if (external_meta_buffer_iommu) {
-      alloc_data->heap_mask = ION_HEAP(ION_IOMMU_HEAP_ID);
+      alloc_data->heap_id_mask = ION_HEAP(ION_IOMMU_HEAP_ID);
     } else {
-      alloc_data->heap_mask = ION_HEAP(MEM_HEAP_ID);
+      alloc_data->heap_id_mask = ION_HEAP(MEM_HEAP_ID);
       alloc_data->flags |= ION_SECURE;
     }
   } else {
-    alloc_data->heap_mask = (ION_HEAP(ION_IOMMU_HEAP_ID));
+    alloc_data->heap_id_mask = (ION_HEAP(ION_IOMMU_HEAP_ID));
   }
   pthread_mutex_lock(&m_vdec_ionlock);
   rc = ioctl(fd,ION_IOC_ALLOC,alloc_data);
@@ -8121,9 +8121,9 @@ int omx_vdec::alloc_map_ion_memory(OMX_U32 buffer_size,
   }
 
   DEBUG_PRINT_HIGH("ion_alloc: device_fd = %d, len = %d, align = %d, "
-     "flags = 0x%x, heap_mask = 0x%x, handle = %p, fd = %d", fd,
+     "flags = 0x%x, heap_id_mask = 0x%x, handle = %p, fd = %d", fd,
      alloc_data->len, alloc_data->align, alloc_data->flags,
-     alloc_data->heap_mask, fd_data->handle, fd_data->fd);
+     alloc_data->heap_id_mask, fd_data->handle, fd_data->fd);
   pthread_mutex_unlock(&m_vdec_ionlock);
   return fd;
 
